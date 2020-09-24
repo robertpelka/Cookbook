@@ -3,7 +3,7 @@
 ![screenshot1](https://user-images.githubusercontent.com/71329150/94199945-e6a1f500-feb9-11ea-9a0f-fc8040f00c56.png)
 
 ###### EN
-Cookbook is a simple cookbook for students, it's a project for programming classes.  
+Cookbook is a simple cookbook for students, it is a project for programming classes.  
 It was made in ASP .NET Core with the use of Razor Pages technology.
 
 ###### PL
