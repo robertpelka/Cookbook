@@ -1,0 +1,148 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@using Cookbook.Models
+@using Cookbook.Services
+@inject JsonFilePrzepisService PrzepisService
+
+
+@if (@SelectedCategory == "Ostatnie")
+{
+    <div class="card-columns">
+        @foreach (var przepis in PrzepisService.GetPrzepisy().Reverse())
+        {
+            @if (IncreaseCounter() < 6)
+            {
+                <a @onclick="(e => SelectPrzepis(przepis.ID))" data-toggle="modal" data-target="#przepisModal">
+                    <div class="card">
+                        <div class="card-img" style="background-image: url('data/images/@przepis.Image');"></div>
+                        <div class="card-body">
+                            <h5 class="card-title">@przepis.Title</h5>
+                            @if (GetCurrentRating(przepis) == -1)
+                            {
+                                <span>Brak głosów.</span>
+                            }
+                            else if (GetCurrentRating(przepis) >= 50)
+                            {
+                                <b style="color:green">@currentRating%</b><span> użytkowników poleca.</span>
+                            }
+                            else
+                            {
+                                <b style="color:red">@currentRating%</b><span> użytkowników poleca.</span>
+                            }
+                        </div>
+                    </div>
+                </a>
+            }
+        }
+    </div>
+}
+else
+{
+    <div class="card-columns">
+        @foreach (var przepis in PrzepisService.GetPrzepisy())
+        {
+            @if (przepis.Category == @SelectedCategory)
+            {
+                <a @onclick="(e => SelectPrzepis(przepis.ID))" data-toggle="modal" data-target="#przepisModal">
+                    <div class="card">
+                        <div class="card-img" style="background-image: url('data/images/@przepis.Image');"></div>
+                        <div class="card-body">
+                            <h5 class="card-title">@przepis.Title</h5>
+                            @if (GetCurrentRating(przepis) == -1)
+                            {
+                                <span>Brak głosów.</span>
+                            }
+                            else if (GetCurrentRating(przepis) >= 50)
+                            {
+                                <b style="color:green">@currentRating%</b><span> użytkowników poleca.</span>
+                            }
+                            else
+                            {
+                                <b style="color:red">@currentRating%</b><span> użytkowników poleca.</span>
+                            }
+                        </div>
+                    </div>
+                </a>
+            }
+        }
+    </div>
+}
+
+
+<div id="przepisModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            @if (selectedPrzepis != null)
+            {
+                <div class="modal-header">
+                    <h4 class="modal-title">@selectedPrzepis.Title</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <img src="data/images/@selectedPrzepis.Image" class="photo float-left" />
+                    <div class="oceny text-center">
+                        <span>Ocen ten przepis:</span>
+                        <img src="data/images/thumbup.png" @onclick="(e => SubmitRating(1))" class="ocena">
+                        <img src="data/images/thumbdown.png" @onclick="(e => SubmitRating(0))" class="ocena">
+                    </div>
+                    <h4>@selectedPrzepis.Description</h4><br />
+                    <h5>Składniki:</h5>
+                    <ul>
+                        @foreach (var ingredient in @selectedPrzepis.Ingredients)
+                        {
+                            <li>@ingredient</li>
+                        }
+                    </ul>
+                    <br /><h5>Sposób przygotowania:</h5>
+                    <p>@selectedPrzepis.HowTo</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public string SelectedCategory { get; set; }
+
+    public int i = 0;
+    Przepis selectedPrzepis;
+    string selectedPrzepisID;
+
+    void SelectPrzepis(string przepisID)
+    {
+        selectedPrzepisID = przepisID;
+        selectedPrzepis = PrzepisService.GetPrzepisy().First(x => x.ID == przepisID);
+        i = 0;
+    }
+
+    int IncreaseCounter()
+    {
+        return i++;
+    }
+
+    double currentRating = 0;
+    double voteCount = 0;
+
+    double GetCurrentRating(Przepis przepis)
+    {
+        if (przepis.Ratings == null)
+        {
+            currentRating = 0;
+            voteCount = 0;
+            return -1;
+        }
+        else
+        {
+            voteCount = przepis.Ratings.Count();
+            currentRating = Convert.ToInt32(przepis.Ratings.Sum() / voteCount * 100);
+            return currentRating;
+        }
+    }
+
+    void SubmitRating(int rating)
+    {
+        PrzepisService.AddRating(selectedPrzepisID, rating);
+        SelectPrzepis(selectedPrzepisID);
+    }
+}

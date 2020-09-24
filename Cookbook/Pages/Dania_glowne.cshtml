@@ -1,0 +1,16 @@
+﻿@page
+@using Cookbook.Components
+@model IndexModel
+@{
+    ViewData["Title"] = "Dania główne";
+}
+
+<div class="text-center">
+    <h1 class="display-2">Dania główne</h1>
+</div>
+
+<PrzepisyLista SelectedCategory="Desery">
+    @(await Html.RenderComponentAsync<PrzepisyLista>(RenderMode.ServerPrerendered, new { SelectedCategory = "Dania główne" }))
+</PrzepisyLista>
+
+<script src="_framework/blazor.server.js"></script>

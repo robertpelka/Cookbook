@@ -1,0 +1,54 @@
+﻿@page
+@model Nowy_przepisModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Nowy przepis";
+
+}
+
+<div class="text-center">
+    <h1 class="display-2">Dodaj przepis</h1>
+</div>
+
+<div id="form">
+    <form class="form-horizontal" method="POST" enctype="multipart/form-data">
+        <span><b>Kategoria</b></span><br />
+        <div class="form-check form-check-inline">
+            <input type="radio" name="Category" id="Przystawki" value="Przystawki" class="form-check-input" checked />
+            <label for="Przystawki" class="form-check-label">Przystawka</label>
+            <input type="radio" name="Category" id="Dania główne" value="Dania główne" class="form-check-input" />
+            <label for="Dania główne" class="form-check-label">Danie główne</label>
+            <input type="radio" name="Category" id="Desery" value="Desery" class="form-check-input" />
+            <label for="Desery" class="form-check-label">Deser</label>
+        </div>
+        <div class="form-group">
+            <label for="PrzepisTitle"><b>Tytuł</b></label>
+            <span style="color:red">@ViewData["Error1"]</span>
+            <input type="text" name="PrzepisTitle" value="@ViewData["PrzepisTitle"]" class="form-control input-sm" />
+        </div>
+        <div class="form-group">
+            <label for="Description"><b>Opis</b></label>
+            <span style="color:red">@ViewData["Error2"]</span>
+            <input type="text" name="Description" value="@ViewData["Description"]" class="form-control input-sm" />
+        </div>
+        <div class="form-group">
+            <label for="Ingredients"><b>Składniki (rozdzielone "; ")</b></label>
+            <span style="color:red">@ViewData["Error3"]</span>
+            <input type="text" name="Ingredients" value="@ViewData["Ingredients"]" class="form-control input-sm" />
+        </div>
+        <div class="form-group">
+            <label for="HowTo"><b>Sposób przygotowania</b></label>
+            <span style="color:red">@ViewData["Error4"]</span>
+            <textarea rows="4" name="HowTo" class="form-control input-sm">@ViewData["HowTo"]</textarea>
+        </div>
+        <div class="form-group">
+            <label for="Image"><b>Dodaj zdjęcie</b></label>
+            <span style="color:red">@ViewData["Error"]</span>
+            <input type="file" asp-for="Image" class="form-control-file" />
+        </div>
+        <div class="form-group text-center">
+            <button type="submit"><b>Dodaj przepis</b></button>
+            <span style="color:green">@ViewData["Thanks"]</span>
+        </div>
+    </form>
+</div>
