@@ -1,2 +1,0 @@
-Książka kucharska dla studentów.
-Aplikacja webowa (strona WWW) w ASP .NET Core z wykorzystaniem technologii Razor Pages.
